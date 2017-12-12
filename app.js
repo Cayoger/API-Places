@@ -3,7 +3,10 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
-var Place = require('./models/place');
+
+// Routes
+const places = require('./routes/places')
+// Config
 const db = require('./config/database');
 
 db.connect();
@@ -18,21 +21,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.post('/place', (req, res) => { 
-  Place.create({
-    title: "Oficina de Okapiasoft",
-    description: "lorem impsut",
-    acceptsCreditCard: true,
-    openHour: 0,
-    closeHour: 24
-  })
-  .then(doc => {
-    res.json(doc);
-  })
-  .catch(err => {
-    console.log(err)
-  })
-});
+app.use('/places', places);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
